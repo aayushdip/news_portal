@@ -1,5 +1,5 @@
 module default {
-    type Company {
+    type Company { 
   required name: str;
   required founded_date: cal::local_date;
   required country: str;
@@ -15,6 +15,7 @@ type News {
   required author: str;
   required section: str;
   required country: str;
+  required news_content: str
 }
 type User{
     required name : str;
