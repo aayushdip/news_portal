@@ -12,9 +12,6 @@ client = edgedb.create_async_client()
 
 @router.get("/company_profile")
 async def get_company():
-    """
-    Get company profile.
-    """
     company = await get_company_qry.get_company(client)
     return success_res(
         True,
@@ -26,9 +23,6 @@ async def get_company():
 
 @router.post("/company_profile", status_code=status.HTTP_201_CREATED)
 async def create_company(company: Company):
-    """
-    Create a new company profile.
-    """
     try:
         created_company = await create_company_qry.create_company(
             client,
