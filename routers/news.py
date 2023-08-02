@@ -15,13 +15,13 @@ client = edgedb.create_async_client()
 
 
 @router.get("/news")
-async def get_news() -> get_news_qry.GetNewsResult:
+async def get_news():
     news = await get_news_qry.get_news(client)
     return success_res(True, status.HTTP_200_OK, "Success", {"data": news})
 
 
 @router.post("/news", status_code=status.HTTP_201_CREATED)
-async def create_news_endpoint(news: News) -> create_news_qry.CreateNewsResult:
+async def create_news_endpoint(news: News):
     try:
         created_news = await create_news_qry.create_news(
             client,
@@ -69,7 +69,7 @@ async def update_news(news_id: UUID, news: News):
 
 
 @router.delete("/news/{news_id}")
-async def delete_news(news_id: UUID) -> delete_news_qry.DeleteNewsResult:
+async def delete_news(news_id: UUID):
     try:
         deleted_news = await delete_news_qry.delete_news(
             client,
