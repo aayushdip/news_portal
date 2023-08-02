@@ -3,15 +3,18 @@
 
 
 from __future__ import annotations
+
 import dataclasses
-import edgedb
 import uuid
+
+import edgedb
 
 
 class NoPydanticValidation:
     @classmethod
     def __get_validators__(cls):
         from pydantic.dataclasses import dataclass as pydantic_dataclass
+
         pydantic_dataclass(cls)
         cls.__pydantic_model__.__get_validators__ = lambda: []
         return []
@@ -25,7 +28,6 @@ class GetUserByUsernameResult(NoPydanticValidation):
     username: str
     admin: bool
     subscriber: bool
-    hashed_password: str
 
 
 async def get_user_by_username(
@@ -42,7 +44,6 @@ async def get_user_by_username(
           username,
           admin,
           subscriber,
-          hashed_password
         } filter .username = <str>$0\
         """,
         arg0,
