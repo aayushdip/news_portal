@@ -1,26 +1,21 @@
-from fastapi import APIRouter, Query, status, HTTPException
 from typing import List, Union
+
 import edgedb
-from queries import (
-    create_user_async_edgeql as create_user_qry,
-    get_subscriber_list_async_edgeql as get_user_subscriber_qry,
-    get_user_by_username_async_edgeql as get_user_with_username_qry,
-    get_users_async_edgeql as get_user_all_list_qry,
-)
-from schemas.user_schema import UserCreate, UserRead
+from fastapi import APIRouter, HTTPException, Query, status
+
 from hashing_password import hash_password
+from queries import create_user_async_edgeql as create_user_qry
+from queries import get_subscriber_list_async_edgeql as get_user_subscriber_qry
+from queries import get_user_by_username_async_edgeql
+from queries import get_users_async_edgeql as get_user_all_list_qry
+from schemas.user_schema import UserCreate, UserRead
 
 router = APIRouter()
 client = edgedb.create_async_client()
 
 
 @router.get("/users", response_model=Union[List[UserRead], UserRead])
-async def get_users(
-    username: str = Query(None, max_length=50)
-) -> Union[
-    List[get_user_all_list_qry.GetUsersResult],
-    get_user_with_username_qry.GetUserByUsernameResult,
-]:
+async def get_users(username: str = Query(None, max_length=50)):
     """
     Get users by their usernames or all users if username is not provided.
     """
@@ -28,14 +23,14 @@ async def get_users(
         users = await get_user_all_list_qry.get_users(client)
         return users
     else:
-        user = await get_user_with_username_qry.get_user_by_username(
+        user = await get_user_by_username_async_edgeql.get_user_by_username(
             client, arg0=username
         )
         return user
 
 
 @router.get("/subscribers", response_model=List[UserRead])
-async def get_subscribers() -> get_user_subscriber_qry.GetSubscriberListResult:
+async def get_subscribers():
     """
     Get a list of subscribers.
     """
@@ -44,7 +39,7 @@ async def get_subscribers() -> get_user_subscriber_qry.GetSubscriberListResult:
 
 
 @router.post("/users", status_code=status.HTTP_201_CREATED)
-async def create_user(user: UserCreate) -> create_user_qry.CreateUserResult:
+async def create_user(user: UserCreate):
     """
     Create a new user.
     """
