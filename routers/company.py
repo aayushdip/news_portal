@@ -11,7 +11,7 @@ router = APIRouter()
 client = edgedb.create_async_client()
 
 
-@router.get("/company_profile", response_model=Company)
+@router.get("/company_profile")
 async def get_company() -> get_company_qry.GetCompanyResult:
     """
     Get company profile.
@@ -21,8 +21,7 @@ async def get_company() -> get_company_qry.GetCompanyResult:
 
 
 @router.post(
-    "/company_profile", status_code=status.HTTP_201_CREATED, response_model=Company
-)
+    "/company_profile", status_code=status.HTTP_201_CREATED)
 async def create_company(company: Company) -> create_company_qry.CreateCompanyResult:
     """
     Create a new company profile.
