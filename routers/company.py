@@ -1,10 +1,9 @@
-from fastapi import APIRouter, Query, status, HTTPException
-from typing import List, Union
 import edgedb
-from queries import (
-    get_company_async_edgeql as get_company_qry,
-    create_company_async_edgeql as create_company_qry,
-)
+from fastapi import APIRouter, HTTPException, status
+
+from queries import create_company_async_edgeql as create_company_qry
+from queries import get_company_async_edgeql as get_company_qry
+from responses_list.success_response import success_res
 from schemas.company_schema import Company
 
 router = APIRouter()
@@ -12,20 +11,18 @@ client = edgedb.create_async_client()
 
 
 @router.get("/company_profile")
-async def get_company() -> get_company_qry.GetCompanyResult:
-    """
-    Get company profile.
-    """
+async def get_company():
     company = await get_company_qry.get_company(client)
-    return company
+    return success_res(
+        True,
+        status.HTTP_200_OK,
+        "Success",
+        {"company": company},
+    )
 
 
-@router.post(
-    "/company_profile", status_code=status.HTTP_201_CREATED)
-async def create_company(company: Company) -> create_company_qry.CreateCompanyResult:
-    """
-    Create a new company profile.
-    """
+@router.post("/company_profile", status_code=status.HTTP_201_CREATED)
+async def create_company(company: Company):
     try:
         created_company = await create_company_qry.create_company(
             client,
@@ -41,4 +38,11 @@ async def create_company(company: Company) -> create_company_qry.CreateCompanyRe
             status_code=status.HTTP_400_BAD_REQUEST,
             detail={"error": f"Company '{company.name}' already exists."},
         )
-    return created_company
+    return success_res(
+        True,
+        status.HTTP_201_CREATED,
+        "Company created",
+        {
+            "company": created_company,
+        },
+    )

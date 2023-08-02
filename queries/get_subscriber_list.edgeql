@@ -5,5 +5,4 @@ select User {
   username,
   admin,
   subscriber,
-  hashed_password
 } filter .subscriber = true
