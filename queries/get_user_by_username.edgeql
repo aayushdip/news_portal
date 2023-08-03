@@ -6,4 +6,5 @@ select User {
   username,
   admin,
   subscriber,
+  hashed_password
 } filter .username = <str>$0

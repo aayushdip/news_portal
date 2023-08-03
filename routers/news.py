@@ -1,8 +1,9 @@
 from uuid import UUID
 
 import edgedb
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status
 
+from dependencies import has_access
 from queries import create_news_async_edgeql as create_news_qry
 from queries import delete_news_async_edgeql as delete_news_qry
 from queries import get_news_async_edgeql as get_news_qry
@@ -20,14 +21,20 @@ async def get_news():
     return success_res(True, status.HTTP_200_OK, "Success", {"data": news})
 
 
-@router.post("/news", status_code=status.HTTP_201_CREATED)
-async def create_news_endpoint(news: News):
+@router.post(
+    "/news",
+    status_code=status.HTTP_201_CREATED,
+    dependencies=[
+        Depends(has_access),
+    ],
+)
+async def create_news_endpoint(news: News, users=Depends(has_access)):
     try:
         created_news = await create_news_qry.create_news(
             client,
             title=news.title,
             date_published=news.date_published,
-            author=news.author,
+            author=users.id,
             section=news.section,
             country=news.country,
             news_content=news.news_content,
@@ -42,15 +49,15 @@ async def create_news_endpoint(news: News):
     )
 
 
-@router.put("/news/{news_id}")
-async def update_news(news_id: UUID, news: News):
+@router.put("/news/{news_id}", dependencies=[Depends(has_access)])
+async def update_news(news_id: UUID, news: News, users=Depends(has_access)):
     try:
         updated_news = await update_news_qry.update_news(
             client,
             news_id=news_id,
             title=news.title,
             date_published=news.date_published,
-            author=news.author,
+            author=users.id,
             section=news.section,
             country=news.country,
             news_content=news.news_content,
@@ -68,7 +75,7 @@ async def update_news(news_id: UUID, news: News):
     )
 
 
-@router.delete("/news/{news_id}")
+@router.delete("/news/{news_id}", dependencies=[Depends(has_access)])
 async def delete_news(news_id: UUID):
     try:
         deleted_news = await delete_news_qry.delete_news(

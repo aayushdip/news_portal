@@ -215,6 +215,16 @@ gmpy = ["gmpy"]
 gmpy2 = ["gmpy2"]
 
 [[package]]
+name = "edb"
+version = "0.0.2"
+description = "Core EdgeDB Namespace"
+optional = false
+python-versions = "*"
+files = [
+    {file = "edb-0.0.2.tar.gz", hash = "sha256:8ea1e5d0d5591e355ff0b1121299817477e77feb693fc00f4248ebd3767255f5"},
+]
+
+[[package]]
 name = "edgedb"
 version = "1.5.0"
 description = "EdgeDB Python driver"
@@ -1073,4 +1083,4 @@ standard = ["colorama (>=0.4)", "httptools (>=0.5.0)", "python-dotenv (>=0.13)",
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "2a60c8c15c3d3f4d438a54371776dd975c4dd22ac1b1718435d2ed54aaee92f5"
+content-hash = "c033d1ceac55c0152becbe8e56736c1368429d06852d00bfe8e3cad2054d8a10"

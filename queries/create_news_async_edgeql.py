@@ -3,16 +3,19 @@
 
 
 from __future__ import annotations
+
 import dataclasses
 import datetime
-import edgedb
 import uuid
+
+import edgedb
 
 
 class NoPydanticValidation:
     @classmethod
     def __get_validators__(cls):
         from pydantic.dataclasses import dataclass as pydantic_dataclass
+
         pydantic_dataclass(cls)
         cls.__pydantic_model__.__get_validators__ = lambda: []
         return []
@@ -21,6 +24,13 @@ class NoPydanticValidation:
 @dataclasses.dataclass
 class CreateNewsResult(NoPydanticValidation):
     id: uuid.UUID
+    author: CreateNewsResultAuthor
+    news_content: str
+
+
+@dataclasses.dataclass
+class CreateNewsResultAuthor(NoPydanticValidation):
+    id: uuid.UUID
 
 
 async def create_news(
@@ -28,23 +38,26 @@ async def create_news(
     *,
     title: str,
     date_published: datetime.date,
-    author: str,
+    author: uuid.UUID,
     section: str,
     country: str,
     news_content: str,
 ) -> CreateNewsResult:
     return await executor.query_single(
         """\
-        # insertNews.edgeql
-
+        select (
         insert News {
-          title := <str>$title,
-          date_published := <cal::local_date>$date_published,
-          author := <str>$author,
-          section := <str>$section,
-          country := <str>$country,
-          news_content := <str>$news_content
-        };\
+            title := <str>$title,
+            date_published := <cal::local_date>$date_published,
+            author:= (
+                select User
+                filter .id = <uuid>$author
+            ),
+            section := <str>$section,
+            country := <str>$country,
+            news_content := <str>$news_content
+        }
+        ) {id, author, news_content};\
         """,
         title=title,
         date_published=date_published,
