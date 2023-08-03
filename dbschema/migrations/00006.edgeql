@@ -1,5 +1,5 @@
-CREATE MIGRATION m1gvavphaa53m3lax7wetipag2q3tems4wryod7bvvvlsfc7br7xoq
-    ONTO m12xjv24iyhrmd3eqnir2e3kxgsi62o6z6kuiofboag356zuqayi4a
+CREATE MIGRATION m12nzdcp43ovo6t6fxbq6u3dpdhmg3g5ugdkqztrcdix3zob7lkmtq
+    ONTO m1ngxhoayr5s634zze3cyokd7tmhzhgzloaeq6ooz6qowzulbcl2ya
 {
   ALTER TYPE default::News {
       CREATE PROPERTY admin: std::bool {

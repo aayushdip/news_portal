@@ -28,6 +28,7 @@ class GetUserByUsernameResult(NoPydanticValidation):
     username: str
     admin: bool
     subscriber: bool
+    hashed_password: str
 
 
 async def get_user_by_username(
@@ -44,6 +45,7 @@ async def get_user_by_username(
           username,
           admin,
           subscriber,
+          hashed_password
         } filter .username = <str>$0\
         """,
         arg0,

@@ -1,14 +1,12 @@
-CREATE MIGRATION m1j4ya3ob6iz2d3o26taphgrzn3sbh6b6hkgxxfvofyy7vooyol2la
-    ONTO m1fklp5rz4cz34nopkwenuzh6jxxc5x2rmkcdsxtr23wmkmbpivs5q
+CREATE MIGRATION m1oukgwu2fvpaknbplv7sp76mjbyc6udr6cu2656dn52rz2cjopwgq
+    ONTO m1gvavphaa53m3lax7wetipag2q3tems4wryod7bvvvlsfc7br7xoq
 {
-  ALTER TYPE default::User {
-      ALTER PROPERTY email {
-          CREATE CONSTRAINT std::exclusive;
-      };
+  ALTER TYPE default::News {
+      DROP PROPERTY author;
   };
-  ALTER TYPE default::User {
-      ALTER PROPERTY email {
-          DROP CONSTRAINT std::regexp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+  ALTER TYPE default::News {
+      CREATE REQUIRED LINK author: default::User {
+          SET REQUIRED USING (<default::User>{});
       };
   };
 };

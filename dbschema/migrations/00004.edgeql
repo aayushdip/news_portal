@@ -1,9 +1,5 @@
-CREATE MIGRATION m1ltthapbahhhbpk2mcm7ofuckhr7szm6uoevimcobtmyno2hukvra
-    ONTO m1j4ya3ob6iz2d3o26taphgrzn3sbh6b6hkgxxfvofyy7vooyol2la
+CREATE MIGRATION m15r53xfc3idyaveld5nkl6azrato3guth6nzxgtlrtjfj6hlrgniq
+    ONTO m1oukgwu2fvpaknbplv7sp76mjbyc6udr6cu2656dn52rz2cjopwgq
 {
-  ALTER TYPE default::News {
-      CREATE REQUIRED PROPERTY news_content: std::str {
-          SET REQUIRED USING (<std::str>{});
-      };
-  };
+  ALTER TYPE default::News DROP EXTENDING default::User;
 };

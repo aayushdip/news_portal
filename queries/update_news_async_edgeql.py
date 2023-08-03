@@ -3,16 +3,19 @@
 
 
 from __future__ import annotations
+
 import dataclasses
 import datetime
-import edgedb
 import uuid
+
+import edgedb
 
 
 class NoPydanticValidation:
     @classmethod
     def __get_validators__(cls):
         from pydantic.dataclasses import dataclass as pydantic_dataclass
+
         pydantic_dataclass(cls)
         cls.__pydantic_model__.__get_validators__ = lambda: []
         return []
@@ -29,7 +32,7 @@ async def update_news(
     news_id: uuid.UUID,
     title: str,
     date_published: datetime.date,
-    author: str,
+    author: uuid.UUID,
     section: str,
     country: str,
     news_content: str,
@@ -41,7 +44,10 @@ async def update_news(
             SET {
                 title := <str>$title,
                 date_published := <cal::local_date>$date_published,
-                author := <str>$author,
+                author := (
+                select User
+                filter .id = <uuid>$author
+            ),
                 section := <str>$section,
                 country := <str>$country,
                 news_content := <str>$news_content,

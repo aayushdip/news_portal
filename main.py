@@ -4,7 +4,7 @@ from __future__ import annotations
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
-from routers import user, company, news
+from routers import company, login, news, user
 
 app = FastAPI()
 
@@ -21,3 +21,4 @@ app.add_middleware(
 app.include_router(user.router, tags=["Users"])
 app.include_router(company.router, tags=["Company"])
 app.include_router(news.router, tags=["News"])
+app.include_router(login.router, tags=["Login"])
